@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overleaf Resume Sync - Setup Guide</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #1f2937;
+      background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 40px 20px;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 48px;
+      background: white;
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 16px;
+      margin: 0 auto 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+      color: white;
+    }
+
+    h1 {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      background-clip: text;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      font-size: 18px;
+      color: #6b7280;
+      margin-bottom: 32px;
+    }
+
+    .step {
+      background: white;
+      border-radius: 12px;
+      padding: 32px;
+      margin-bottom: 24px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      transition: transform 0.2s ease;
+    }
+
+    .step:hover {
+      transform: translateY(-2px);
+    }
+
+    .step-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .step-number {
+      width: 40px;
+      height: 40px;
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: white;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      margin-right: 16px;
+    }
+
+    .step-title {
+      font-size: 20px;
+      font-weight: 600;
+      color: #1f2937;
+    }
+
+    .step-content {
+      margin-left: 56px;
+    }
+
+    .code-block {
+      background: #1f2937;
+      color: #f9fafb;
+      padding: 20px;
+      border-radius: 8px;
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 14px;
+      margin: 16px 0;
+      overflow-x: auto;
+      position: relative;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: #374151;
+      border: none;
+      color: #9ca3af;
+      padding: 6px 12px;
+      border-radius: 4px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #4b5563;
+      color: #f9fafb;
+    }
+
+    .file-structure {
+      background: #f8fafc;
+      border: 2px dashed #cbd5e1;
+      border-radius: 8px;
+      padding: 20px;
+      margin: 16px 0;
+      font-family: monospace;
+      font-size: 14px;
+    }
+
+    .warning {
+      background: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .warning-title {
+      font-weight: 600;
+      color: #92400e;
+      margin-bottom: 8px;
+    }
+
+    .info {
+      background: #dbeafe;
+      border-left: 4px solid #3b82f6;
+      padding: 16px;
+      border-radius: 8px;
+      margin: 16px 0;
+    }
+
+    .info-title {
+      font-weight: 600;
+      color: #1d4ed8;
+      margin-bottom: 8px;
+    }
+
+    .download-links {
+      display: flex;
+      gap: 16px;
+      margin: 24px 0;
+    }
+
+    .download-btn {
+      background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+      color: white;
+      text-decoration: none;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      transition: transform 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .download-btn:hover {
+      transform: translateY(-2px);
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 48px;
+      padding: 24px;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+    }
+
+    ul {
+      margin-left: 20px;
+      margin-bottom: 16px;
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    a {
+      color: #3b82f6;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">📄</div>
+      <h1>Overleaf Resume Sync</h1>
+      <p class="subtitle">Complete setup guide to sync your LaTeX resume from Overleaf to GitHub</p>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">1</div>
+        <div class="step-title">Download Required Files</div>
+      </div>
+      <div class="step-content">
+        <p>Download the Python server script and GitHub Actions workflow:</p>
+        <div class="download-links">
+          <a href="#" class="download-btn" id="downloadServer">
+            📦 Download Server Script
+          </a>
+          <a href="#" class="download-btn" id="downloadWorkflow">
+            ⚙️ Download GitHub Workflow
+          </a>
+        </div>
+        <div class="info">
+          <div class="info-title">What's included:</div>
+          <ul>
+            <li><strong>resume_sync_server.py</strong> - Local Flask server for handling Overleaf downloads</li>
+            <li><strong>requirements.txt</strong> - Python dependencies</li>
+            <li><strong>github_workflow.yml</strong> - GitHub Actions for PDF compilation</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">2</div>
+        <div class="step-title">Setup Python Environment</div>
+      </div>
+      <div class="step-content">
+        <p>Install Python dependencies and run the local server:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# Install dependencies
+pip install flask requests python-dotenv PyGithub
+
+# Or using requirements.txt (if downloaded)
+pip install -r requirements.txt
+
+# Run the server
+python resume_sync_server.py
+        </div>
+        <div class="warning">
+          <div class="warning-title">Important:</div>
+          The local server must be running for the extension to work. Keep the terminal window open.
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">3</div>
+        <div class="step-title">GitHub Repository Setup</div>
+      </div>
+      <div class="step-content">
+        <p>Create a GitHub repository for your resume:</p>
+        <ol>
+          <li>Go to <a href="https://github.com/new" target="_blank">GitHub</a> and create a new repository</li>
+          <li>Name it something like <code>latex-resume</code></li>
+          <li>Make it public (required for GitHub Pages)</li>
+          <li>Initialize with a README</li>
+        </ol>
+        
+        <div class="file-structure">
+your-resume-repo/
+├── .github/
+│   └── workflows/
+│       └── build-resume.yml
+├── resume.tex
+├── README.md
+└── resume.pdf (auto-generated)
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">4</div>
+        <div class="step-title">GitHub Actions Workflow</div>
+      </div>
+      <div class="step-content">
+        <p>Add the GitHub Actions workflow to automatically build your PDF:</p>
+        <ol>
+          <li>In your repository, create <code>.github/workflows/build-resume.yml</code></li>
+          <li>Copy the downloaded workflow content into this file</li>
+          <li>Commit and push the changes</li>
+        </ol>
+        <div class="info">
+          <div class="info-title">What this does:</div>
+          <ul>
+            <li>Automatically compiles your LaTeX resume to PDF when changes are pushed</li>
+            <li>Deploys the PDF to GitHub Pages</li>
+            <li>Makes your resume available at a permanent URL</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">5</div>
+        <div class="step-title">Environment Configuration</div>
+      </div>
+      <div class="step-content">
+        <p>Create a <code>.env</code> file in the same directory as your Python server:</p>
+        <div class="code-block">
+          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+# .env file
+GITHUB_TOKEN=your_github_personal_access_token
+GITHUB_USERNAME=your_github_username
+GITHUB_REPO=your_resume_repository_name
+        </div>
+        <div class="warning">
+          <div class="warning-title">GitHub Token Setup:</div>
+          <ol>
+            <li>Go to <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings > Developer settings > Personal access tokens</a></li>
+            <li>Generate a new token (classic)</li>
+            <li>Give it <strong>repo</strong> permissions</li>
+            <li>Copy the token and add it to your .env file</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">6</div>
+        <div class="step-title">Enable GitHub Pages</div>
+      </div>
+      <div class="step-content">
+        <p>Configure GitHub Pages to serve your resume:</p>
+        <ol>
+          <li>Go to your repository settings</li>
+          <li>Scroll to "Pages" section</li>
+          <li>Set source to "GitHub Actions"</li>
+          <li>Your resume will be available at: <code>https://username.github.io/repository-name/resume.pdf</code></li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-header">
+        <div class="step-number">7</div>
+        <div class="step-title">Test the Extension</div>
+      </div>
+      <div class="step-content">
+        <p>Now you're ready to use the extension:</p>
+        <ol>
+          <li>Open your Overleaf project</li>
+          <li>Click the extension icon</li>
+          <li>Click "Sync Resume to GitHub"</li>
+          <li>Check your GitHub repository for the updated files</li>
+          <li>Wait for GitHub Actions to build your PDF</li>
+        </ol>
+        <div class="info">
+          <div class="info-title">Troubleshooting:</div>
+          <ul>
+            <li>Make sure the Python server is running</li>
+            <li>Check that your .env file has the correct GitHub credentials</li>
+            <li>Verify you're on an Overleaf project page</li>
+            <li>Check the browser console for any error messages</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer">
+      <h3>🎉 You're all set!</h3>
+      <p>Your Overleaf resume will now sync to GitHub with one click, automatically building and deploying your PDF.</p>
+    </div>
+  </div>
+
+  <script>
+    function copyCode(button) {
+      const codeBlock = button.parentElement;
+      const code = codeBlock.textContent.replace('Copy', '').trim();
+      
+      navigator.clipboard.writeText(code).then(() => {
+        button.textContent = 'Copied!';
+        setTimeout(() => {
+          button.textContent = 'Copy';
+        }, 2000);
+      });
+    }
+
+    // Generate downloadable files
+    document.getElementById('downloadServer').addEventListener('click', function(e) {
+      e.preventDefault();
+      downloadServerFiles();
+    });
+
+    document.getElementById('downloadWorkflow').addEventListener('click', function(e) {
+      e.preventDefault();
+      downloadWorkflowFile();
+    });
+
+    function downloadServerFiles() {
+      // Create server script content
+      const serverScript = `#!/usr/bin/env python3
+"""
+Overleaf Resume Sync Server
+Local Flask server to handle Overleaf downloads and GitHub pushes
+"""
+
+import os
+import tempfile
+import zipfile
+import requests
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from github import Github
+from dotenv import load_dotenv
+import logging
+
+# Load environment variables
+load_dotenv()
+
+app = Flask(__name__)
+CORS(app)
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# GitHub configuration
+GITHUB_TOKEN = os.getenv('GITHUB_TOKEN')
+GITHUB_USERNAME = os.getenv('GITHUB_USERNAME')
+GITHUB_REPO = os.getenv('GITHUB_REPO')
+
+if not all([GITHUB_TOKEN, GITHUB_USERNAME, GITHUB_REPO]):
+    logger.error("Missing required environment variables. Check your .env file.")
+    exit(1)
+
+@app.route('/health', methods=['GET'])
+def health_check():
+    """Health check endpoint"""
+    return jsonify({"status": "healthy", "message": "Server is running"})
+
+@app.route('/sync', methods=['POST'])
+def sync_resume():
+    """Main sync endpoint"""
+    try:
+        data = request.json
+        download_url = data.get('downloadUrl')
+        project_id = data.get('projectId')
+        
+        if not download_url or not project_id:
+            return jsonify({"error": "Missing download URL or project ID"}), 400
+        
+        logger.info(f"Starting sync for project: {project_id}")
+        
+        # Download and extract Overleaf project
+        tex_content = download_and_extract(download_url)
+        if not tex_content:
+            return jsonify({"error": "Failed to download or extract LaTeX file"}), 500
+        
+        # Push to GitHub
+        success = push_to_github(tex_content)
+        if not success:
+            return jsonify({"error": "Failed to push to GitHub"}), 500
+        
+        return jsonify({
+            "message": "Resume synced successfully!",
+            "project_id": project_id,
+            "repo_url": f"https://github.com/{GITHUB_USERNAME}/{GITHUB_REPO}"
+        })
+        
+    except Exception as e:
+        logger.error(f"Sync error: {str(e)}")
+        return jsonify({"error": str(e)}), 500
+
+def download_and_extract(download_url):
+    """Download ZIP from Overleaf and extract LaTeX content"""
+    try:
+        # Download the ZIP file
+        logger.info("Downloading project ZIP...")
+        response = requests.get(download_url, timeout=30)
+        response.raise_for_status()
+        
+        # Create temporary file for ZIP
+        with tempfile.NamedTemporaryFile(delete=False, suffix='.zip') as temp_zip:
+            temp_zip.write(response.content)
+            temp_zip_path = temp_zip.name
+        
+        # Extract and find .tex file
+        with zipfile.ZipFile(temp_zip_path, 'r') as zip_ref:
+            file_list = zip_ref.namelist()
+            
+            # Look for main.tex or any .tex file
+            tex_files = [f for f in file_list if f.endswith('.tex')]
+            if not tex_files:
+                logger.error("No .tex files found in project")
+                return None
+            
+            # Prefer main.tex, otherwise use first .tex file
+            main_tex = 'main.tex' if 'main.tex' in tex_files else tex_files[0]
+            
+            with zip_ref.open(main_tex) as tex_file:
+                tex_content = tex_file.read().decode('utf-8')
+        
+        # Clean up
+        os.unlink(temp_zip_path)
+        
+        logger.info(f"Successfully extracted {main_tex}")
+        return tex_content
+        
+    except Exception as e:
+        logger.error(f"Download/extract error: {str(e)}")
+        return None
+
+def push_to_github(tex_content):
+    """Push LaTeX content to GitHub repository"""
+    try:
+        # Initialize GitHub client
+        g = Github(GITHUB_TOKEN)
+        repo = g.get_user(GITHUB_USERNAME).get_repo(GITHUB_REPO)
+        
+        # Check if resume.tex exists
+        try:
+            file = repo.get_contents("resume.tex")
+            # Update existing file
+            repo.update_file(
+                "resume.tex",
+                "Update resume from Overleaf sync",
+                tex_content,
+                file.sha
+            )
+            logger.info("Updated existing resume.tex")
+        except:
+            # Create new file
+            repo.create_file(
+                "resume.tex",
+                "Add resume from Overleaf sync",
+                tex_content
+            )
+            logger.info("Created new resume.tex")
+        
+        return True
+        
+    except Exception as e:
+        logger.error(f"GitHub push error: {str(e)}")
+        return False
+
+if __name__ == '__main__':
+    logger.info("Starting Overleaf Resume Sync Server...")
+    logger.info(f"GitHub repo: {GITHUB_USERNAME}/{GITHUB_REPO}")
+    app.run(host='localhost', port=5000, debug=True)
+`;
+
+      const requirements = `flask==2.3.3
+flask-cors==4.0.0
+requests==2.31.0
+python-dotenv==1.0.0
+PyGithub==1.59.1
+`;
+
+      // Create and download server files
+      downloadFile('resume_sync_server.py', serverScript);
+      setTimeout(() => downloadFile('requirements.txt', requirements), 100);
+    }
+
+    function downloadWorkflowFile() {
+      const workflow = `name: Build LaTeX Resume
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    
+    - name: Setup LaTeX
+      uses: xu-cheng/latex-action@v2
+      with:
+        root_file: resume.tex
+        args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
+    
+    - name: Upload PDF artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: resume-pdf
+        path: resume.pdf
+    
+    - name: Deploy to GitHub Pages
+      uses: peaceiris/actions-gh-pages@v3
+      if: github.ref == 'refs/heads/main'
+      with:
+        github_token: \${{ secrets.GITHUB_TOKEN }}
+        publish_dir: ./
+        keep_files: true
+`;
+
+      downloadFile('build-resume.yml', workflow);
+    }
+
+    function downloadFile(filename, content) {
+      const blob = new Blob([content], { type: 'text/plain' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = filename;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Overleaf Resume Sync</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      width: 350px;
+      height: 400px;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      overflow: hidden;
+    }
+
+    .container {
+      padding: 24px;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .logo {
+      width: 48px;
+      height: 48px;
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 12px;
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+    }
+
+    .title {
+      font-size: 20px;
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+
+    .subtitle {
+      font-size: 14px;
+      opacity: 0.8;
+      line-height: 1.4;
+    }
+
+    .content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .status {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 24px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+    }
+
+    .status-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+    }
+
+    .status-text {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+
+    .sync-button {
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      border: none;
+      border-radius: 12px;
+      padding: 16px 24px;
+      color: white;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 16px;
+      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+    }
+
+    .sync-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
+    }
+
+    .sync-button:disabled {
+      background: rgba(255, 255, 255, 0.2);
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .setup-button {
+      background: transparent;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 8px;
+      padding: 12px 20px;
+      color: white;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .setup-button:hover {
+      border-color: rgba(255, 255, 255, 0.5);
+      background: rgba(255, 255, 255, 0.1);
+    }
+
+    .loading {
+      display: none;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .spinner {
+      width: 24px;
+      height: 24px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+      border-top: 3px solid white;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo">📄</div>
+      <div class="title">Resume Sync</div>
+      <div class="subtitle">Sync your Overleaf resume to GitHub</div>
+    </div>
+
+    <div class="content">
+      <div id="status" class="status">
+        <div class="status-icon">🔍</div>
+        <div class="status-text">Checking Overleaf page...</div>
+      </div>
+
+      <div id="loading" class="loading">
+        <div class="spinner"></div>
+      </div>
+
+      <button id="syncBtn" class="sync-button" disabled>
+        Sync Resume to GitHub
+      </button>
+
+      <button id="setupBtn" class="setup-button">
+        Setup Guide
+      </button>
+    </div>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
