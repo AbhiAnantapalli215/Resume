@@ -156,10 +156,11 @@ def push_to_github(tex_content):
         return None
 
 if __name__ == '__main__':
+    port = int(os.environ.get("PORT", 5000))  # Use Render's PORT or default to 5000 for local dev
     logger.info("=" * 50)
     logger.info("Starting Overleaf Resume Sync Server...")
     logger.info(f"GitHub repo: {GITHUB_USERNAME}/{GITHUB_REPO}")
-    logger.info("Server will run at: http://localhost:5000")
-    logger.info("Health check: http://localhost:5000/health")
+    logger.info(f"Server will run at: http://0.0.0.0:{port}")
+    logger.info(f"Health check: http://0.0.0.0:{port}/health")
     logger.info("=" * 50)
-    app.run(host='localhost', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=port)
