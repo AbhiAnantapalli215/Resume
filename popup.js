@@ -67,48 +67,51 @@ class PopupController {
   }
 
   async syncResume() {
-    this.showLoading(true);
-    this.syncBtn.disabled = true;
+  this.showLoading(true);
+  this.syncBtn.disabled = true;
 
-    try {
-      const { projectId } = await chrome.storage.local.get(['projectId']);
-      
-      if (!projectId) {
-        throw new Error('Project ID not found');
-      }
+  try {
+    const { projectId } = await chrome.storage.local.get(['projectId']);
+    if (!projectId) throw new Error('Project ID not found');
 
-      const downloadUrl = `https://www.overleaf.com/project/${projectId}/download/zip`;
-      
-      const response = await fetch('https://connection-99g4.onrender.com/sync', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          downloadUrl,
-          projectId
-        })
-      });
+    const downloadUrl = `https://www.overleaf.com/project/${projectId}/download/zip`;
 
-      const result = await response.json();
+    // 🔥 Download ZIP from Overleaf directly in browser
+    const zipRes = await fetch(downloadUrl, { credentials: 'include' });
+    if (!zipRes.ok) throw new Error('Failed to download Overleaf project ZIP');
 
-      if (response.ok) {
-        this.updateStatus('✅', result.message || 'Resume synced successfully!');
-        setTimeout(() => {
-          this.updateStatus('🚀', 'Ready for next sync');
-          this.syncBtn.disabled = false;
-        }, 3000);
-      } else {
-        throw new Error(result.error || 'Sync failed');
-      }
-    } catch (error) {
-      console.error('Sync error:', error);
-      this.updateStatus('❌', error.message || 'Sync failed');
-      this.syncBtn.disabled = false;
-    } finally {
-      this.showLoading(false);
+    const zipBlob = await zipRes.blob();
+    const formData = new FormData();
+    formData.append('zipfile', zipBlob, 'resume.zip');
+    formData.append('projectId', projectId);
+
+    // 🔥 Send ZIP file to server
+    const syncRes = await fetch('https://connection-99g4.onrender.com/sync', {
+      method: 'POST',
+      body: formData,
+    });
+
+    const result = await syncRes.json();
+    if (syncRes.ok) {
+      this.updateStatus('✅', result.message || 'Resume synced successfully!');
+    } else {
+      throw new Error(result.error || 'Sync failed');
     }
+
+    setTimeout(() => {
+      this.updateStatus('🚀', 'Ready for next sync');
+      this.syncBtn.disabled = false;
+    }, 3000);
+
+  } catch (err) {
+    console.error('Sync error:', err);
+    this.updateStatus('❌', err.message || 'Sync failed');
+    this.syncBtn.disabled = false;
+  } finally {
+    this.showLoading(false);
   }
+}
+
 
   openSetupGuide() {
     chrome.tabs.create({ url: chrome.runtime.getURL('setup.html') });

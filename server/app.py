@@ -3,7 +3,7 @@
 Overleaf Resume Sync Server
 Local Flask server to handle Overleaf downloads and GitHub pushes
 """
-
+import io
 import os
 import tempfile
 import zipfile
@@ -45,37 +45,24 @@ def health_check():
 
 @app.route('/sync', methods=['POST'])
 def sync_resume():
-    """Main sync endpoint"""
     try:
-        data = request.json
-        download_url = data.get('downloadUrl')
-        project_id = data.get('projectId')
-        
-        if not download_url or not project_id:
-            return jsonify({"error": "Missing download URL or project ID"}), 400
-        
-        logger.info(f"Starting sync for project: {project_id}")
-        
-        # Download and extract Overleaf project
-        tex_content = download_and_extract(download_url)
-        if not tex_content:
-            return jsonify({"error": "Failed to download or extract LaTeX file"}), 500
-        
-        # Push to GitHub
-        commit_url = push_to_github(tex_content)
-        if not commit_url:
-            return jsonify({"error": "Failed to push to GitHub"}), 500
-        
-        return jsonify({
-            "message": "Resume synced successfully!",
-            "project_id": project_id,
-            "repo_url": f"https://github.com/{GITHUB_USERNAME}/{GITHUB_REPO}",
-            "commit_url": commit_url,
-            "pages_url": f"https://{GITHUB_USERNAME}.github.io/{GITHUB_REPO}/resume.pdf"
-        })
-        
+        zip_file = request.files.get('zipfile')
+        project_id = request.form.get('projectId')
+
+        if not zip_file or not project_id:
+            return jsonify({"error": "Missing file or project ID"}), 400
+
+        extract_path = f"latex_projects/{project_id}"
+        os.makedirs(extract_path, exist_ok=True)
+
+        with zipfile.ZipFile(io.BytesIO(zip_file.read())) as z:
+            z.extractall(extract_path)
+
+        # Continue with GitHub sync logic here...
+        return jsonify({"message": "✅ LaTeX project extracted and ready!"})
+
     except Exception as e:
-        logger.error(f"Sync error: {str(e)}")
+        print("Error:", e)
         return jsonify({"error": str(e)}), 500
 
 def download_and_extract(download_url):

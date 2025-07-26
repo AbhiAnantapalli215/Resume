@@ -251,7 +251,7 @@
         <div class="info">
           <div class="info-title">What's included:</div>
           <ul>
-            <li><strong>resume_sync_server.py</strong> - Local Flask server for handling Overleaf downloads</li>
+            <li><strong>app.py</strong> - Local Flask server for handling Overleaf downloads</li>
             <li><strong>requirements.txt</strong> - Python dependencies</li>
             <li><strong>github_workflow.yml</strong> - GitHub Actions for PDF compilation</li>
           </ul>
@@ -267,7 +267,7 @@
       <div class="step-content">
         <p>Install Python dependencies and run the local server:</p>
         <div class="code-block">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn">Copy</button>
 # Install dependencies
 pip install flask requests python-dotenv PyGithub
 
@@ -275,7 +275,7 @@ pip install flask requests python-dotenv PyGithub
 pip install -r requirements.txt
 
 # Run the server
-python resume_sync_server.py
+python app.py
         </div>
         <div class="warning">
           <div class="warning-title">Important:</div>
@@ -341,7 +341,7 @@ your-resume-repo/
       <div class="step-content">
         <p>Create a <code>.env</code> file in the same directory as your Python server:</p>
         <div class="code-block">
-          <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+          <button class="copy-btn">Copy</button>
 # .env file
 GITHUB_TOKEN=your_github_personal_access_token
 GITHUB_USERNAME=your_github_username

@@ -1,29 +1,34 @@
 function copyCode(button) {
-      const codeBlock = button.parentElement;
-      const code = codeBlock.textContent.replace('Copy', '').trim();
-      
-      navigator.clipboard.writeText(code).then(() => {
-        button.textContent = 'Copied!';
-        setTimeout(() => {
-          button.textContent = 'Copy';
-        }, 2000);
-      });
-    }
+  const codeBlock = button.parentElement;
+  // Adjust the text extraction to account for the button's text ('Copy') being part of the parent's textContent
+  const code = Array.from(codeBlock.childNodes)
+    .filter(node => node.nodeType === Node.TEXT_NODE)
+    .map(node => node.textContent.trim())
+    .join('\n')
+    .trim();
 
-    // Generate downloadable files
-    document.getElementById('downloadServer').addEventListener('click', function(e) {
-      e.preventDefault();
-      downloadServerFiles();
-    });
+  navigator.clipboard.writeText(code).then(() => {
+    button.textContent = 'Copied!';
+    setTimeout(() => {
+      button.textContent = 'Copy';
+    }, 2000);
+  });
+}
 
-    document.getElementById('downloadWorkflow').addEventListener('click', function(e) {
-      e.preventDefault();
-      downloadWorkflowFile();
-    });
+// Generate downloadable files
+document.getElementById('downloadServer').addEventListener('click', function(e) {
+  e.preventDefault();
+  downloadServerFiles();
+});
 
-    function downloadServerFiles() {
-      // Create server script content
-      const serverScript = `#!/usr/bin/env python3
+document.getElementById('downloadWorkflow').addEventListener('click', function(e) {
+  e.preventDefault();
+  downloadWorkflowFile();
+});
+
+function downloadServerFiles() {
+  // Create server script content
+  const serverScript = `#!/usr/bin/env python3
 """
 Overleaf Resume Sync Server
 Local Flask server to handle Overleaf downloads and GitHub pushes
@@ -174,20 +179,20 @@ if __name__ == '__main__':
     app.run(host='localhost', port=5000, debug=True)
 `;
 
-      const requirements = `flask==2.3.3
+  const requirements = `flask==2.3.3
 flask-cors==4.0.0
 requests==2.31.0
 python-dotenv==1.0.0
 PyGithub==1.59.1
 `;
 
-      // Create and download server files
-      downloadFile('resume_sync_server.py', serverScript);
-      setTimeout(() => downloadFile('requirements.txt', requirements), 100);
-    }
+  // Create and download server files
+  downloadFile('app.py', serverScript);
+  setTimeout(() => downloadFile('requirements.txt', requirements), 100);
+}
 
-    function downloadWorkflowFile() {
-      const workflow = `name: Build LaTeX Resume
+function downloadWorkflowFile() {
+  const workflow = `name: Build LaTeX Resume
 
 on:
   push:
@@ -224,17 +229,24 @@ jobs:
         keep_files: true
 `;
 
-      downloadFile('build-resume.yml', workflow);
-    }
+  downloadFile('build-resume.yml', workflow);
+}
 
-    function downloadFile(filename, content) {
-      const blob = new Blob([content], { type: 'text/plain' });
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = filename;
-      document.body.appendChild(a);
-      a.click();
-      window.URL.revokeObjectURL(url);
-      document.body.removeChild(a);
-    }
+function downloadFile(filename, content) {
+  const blob = new Blob([content], { type: 'text/plain' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  document.body.appendChild(a);
+  a.click();
+  window.URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+}
+
+// **NEW CODE**: Attach event listeners to all copy buttons once the DOM is loaded
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.copy-btn').forEach(button => {
+    button.addEventListener('click', () => copyCode(button));
+  });
+});
