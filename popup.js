@@ -49,7 +49,7 @@ class PopupController {
 
   async checkServerStatus() {
     try {
-      const response = await fetch('http://localhost:5000/health', {
+      const response = await fetch('https://connection-99g4.onrender.com/health', {
         method: 'GET',
         timeout: 3000
       });
@@ -79,7 +79,7 @@ class PopupController {
 
       const downloadUrl = `https://www.overleaf.com/project/${projectId}/download/zip`;
       
-      const response = await fetch('http://localhost:5000/sync', {
+      const response = await fetch('https://connection-99g4.onrender.com/sync', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
