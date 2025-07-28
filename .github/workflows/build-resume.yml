@@ -23,29 +23,29 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Compile LaTeX Resume
+    - name: Compile LaTeX (Resume/resume.tex)
       uses: xu-cheng/latex-action@v3
       with:
         root_file: resume.tex
         working_directory: Resume
         args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
-        extra_system_packages: "py3-pip py3-pygments"
 
-    - name: Verify resume.pdf exists
+    - name: Debug output contents
+      run: |
+        echo "Checking contents of Resume/"
+        ls -la Resume/
+
+    - name: Check for PDF and move to root
       run: |
         if [ -f "Resume/resume.pdf" ]; then
-          echo "✅ resume.pdf was created successfully."
+          echo "✅ PDF created successfully."
+          mv Resume/resume.pdf ./resume.pdf
         else
-          echo "❌ resume.pdf was not created. Failing the build."
-          echo "Files in Resume/ directory:"
-          ls -l Resume/
+          echo "❌ PDF creation failed. resume.pdf not found!"
           exit 1
         fi
 
-    - name: Move PDF to project root
-      run: mv Resume/resume.pdf ./resume.pdf
-
-    - name: Create index.html for GitHub Pages
+    - name: Create index.html to view and download resume
       run: |
         cat > index.html << 'EOF'
         <!DOCTYPE html>
