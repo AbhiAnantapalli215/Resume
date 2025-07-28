@@ -18,18 +18,18 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
-    
+
     - name: Setup LaTeX
       uses: xu-cheng/latex-action@v3
       with:
         root_file: resume.tex
         args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
         extra_system_packages: "py3-pip py3-pygments"
-    
+
     - name: Check if PDF was created
       run: |
         if [ -f "resume.pdf" ]; then
@@ -39,7 +39,7 @@ jobs:
           echo "PDF creation failed"
           exit 1
         fi
-    
+
     - name: Create index.html for GitHub Pages
       run: |
         cat > index.html << 'EOF'
@@ -100,15 +100,15 @@ jobs:
           <div class="container">
             <h1>📄 My Resume</h1>
             <p>Latest version compiled from LaTeX source</p>
-            
+
             <iframe src="resume.pdf" type="application/pdf">
               <p>Your browser doesn't support PDF viewing. <a href="resume.pdf">Download the PDF</a> instead.</p>
             </iframe>
-            
+
             <a href="resume.pdf" class="download-btn" download>
               📥 Download PDF
             </a>
-            
+
             <div class="meta">
               Last updated: $(date)
               <br>
@@ -118,15 +118,17 @@ jobs:
         </body>
         </html>
         EOF
-    
+
     - name: Setup Pages
       uses: actions/configure-pages@v4
-    
+
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
       with:
         path: '.'
-    
+
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
+      environment:
+        name: github-pages
