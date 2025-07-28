@@ -23,22 +23,27 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Setup LaTeX
+    - name: Compile LaTeX Resume
       uses: xu-cheng/latex-action@v3
       with:
         root_file: resume.tex
+        working_directory: Resume
         args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
         extra_system_packages: "py3-pip py3-pygments"
 
-    - name: Check if PDF was created
+    - name: Verify resume.pdf exists
       run: |
-        if [ -f "resume.pdf" ]; then
-          echo "PDF created successfully"
-          ls -la resume.pdf
+        if [ -f "Resume/resume.pdf" ]; then
+          echo "✅ resume.pdf was created successfully."
         else
-          echo "PDF creation failed"
+          echo "❌ resume.pdf was not created. Failing the build."
+          echo "Files in Resume/ directory:"
+          ls -l Resume/
           exit 1
         fi
+
+    - name: Move PDF to project root
+      run: mv Resume/resume.pdf ./resume.pdf
 
     - name: Create index.html for GitHub Pages
       run: |
@@ -119,7 +124,7 @@ jobs:
         </html>
         EOF
 
-    - name: Setup Pages
+    - name: Setup GitHub Pages
       uses: actions/configure-pages@v4
 
     - name: Upload artifact
