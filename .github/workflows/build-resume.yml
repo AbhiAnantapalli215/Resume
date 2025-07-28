@@ -23,23 +23,21 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Compile LaTeX (Resume/resume.tex)
+    - name: Compile LaTeX (resume.tex)
       uses: xu-cheng/latex-action@v3
       with:
         root_file: resume.tex
-        working_directory: Resume
         args: -pdf -file-line-error -halt-on-error -interaction=nonstopmode
 
     - name: Debug output contents
       run: |
-        echo "Checking contents of Resume/"
-        ls -la Resume/
+        echo "Checking contents of current directory"
+        ls -la
 
-    - name: Check for PDF and move to root
+    - name: Check for PDF and rename
       run: |
-        if [ -f "Resume/resume.pdf" ]; then
+        if [ -f "resume.pdf" ]; then
           echo "✅ PDF created successfully."
-          mv Resume/resume.pdf ./resume.pdf
         else
           echo "❌ PDF creation failed. resume.pdf not found!"
           exit 1
@@ -135,4 +133,3 @@ jobs:
     - name: Deploy to GitHub Pages
       id: deployment
       uses: actions/deploy-pages@v4
-      environment: github-pages
