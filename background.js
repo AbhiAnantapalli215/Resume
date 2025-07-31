@@ -1,40 +1,34 @@
-// Background service worker
 chrome.runtime.onInstalled.addListener((details) => {
   if (details.reason === 'install') {
-    // Open setup guide on first install
     chrome.tabs.create({
       url: chrome.runtime.getURL('setup.html')
     });
   }
 });
 
-// Handle extension icon click
-chrome.action.onClicked.addListener((tab) => {
-  // This will open the popup automatically
-});
+function isOverleafProjectTab(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.hostname === "www.overleaf.com" && parsed.pathname.startsWith("/project/");
+  } catch {
+    return false;
+  }
+}
 
-// Monitor tab updates to detect Overleaf projects
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url?.includes('overleaf.com/project/')) {
-    // Update badge to show project is detected
-    chrome.action.setBadgeText({
-      text: '✓',
-      tabId: tabId
-    });
-    chrome.action.setBadgeBackgroundColor({
-      color: '#10b981',
-      tabId: tabId
-    });
+  if (changeInfo.status === 'complete') {
+    if (isOverleafProjectTab(tab.url)) {
+      chrome.action.setBadgeText({ text: '✓', tabId });
+      chrome.action.setBadgeBackgroundColor({ color: '#10b981', tabId });
+    } else {
+      chrome.action.setBadgeText({ text: '', tabId });
+    }
   }
 });
 
-// Clear badge when leaving Overleaf
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
   const tab = await chrome.tabs.get(activeInfo.tabId);
-  if (!tab.url?.includes('overleaf.com/project/')) {
-    chrome.action.setBadgeText({
-      text: '',
-      tabId: activeInfo.tabId
-    });
+  if (!isOverleafProjectTab(tab.url)) {
+    chrome.action.setBadgeText({ text: '', tabId: activeInfo.tabId });
   }
 });

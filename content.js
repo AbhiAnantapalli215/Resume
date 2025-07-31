@@ -1,5 +1,4 @@
-// Content script for Overleaf project pages
-(function() {
+(function () {
   'use strict';
 
   class OverleafDetector {
@@ -16,12 +15,9 @@
     detectProject() {
       const url = window.location.href;
       const match = url.match(/\/project\/([a-f0-9]+)/);
-      
       if (match) {
         this.projectId = match[1];
         console.log('Overleaf Resume Sync: Project detected -', this.projectId);
-        
-        // Store project info
         chrome.storage.local.set({
           projectId: this.projectId,
           projectUrl: url,
@@ -43,11 +39,8 @@
     }
   }
 
-  // Initialize when page loads
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', () => {
-      new OverleafDetector();
-    });
+    document.addEventListener('DOMContentLoaded', () => new OverleafDetector());
   } else {
     new OverleafDetector();
   }

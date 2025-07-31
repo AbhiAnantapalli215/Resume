@@ -10,31 +10,8 @@ class PopupController {
 
     this.setupEventListeners();
     this.init();
-    this.generateDots(); 
   }
 
-
-generateDots() {
-    const dotContainer = document.querySelector('.dot-background');
-    const dotCount = 10; // number of dots
-
-    for (let i = 0; i < dotCount; i++) {
-      const dot = document.createElement('div');
-      dot.classList.add('dot');
-
-      const size = Math.floor(Math.random() * 15) + 6;
-      const x = Math.random() * 100;
-      const y = Math.random() * 100;
-
-      dot.style.width = `${size}px`;
-      dot.style.height = `${size}px`;
-      dot.style.top = `${y}%`;
-      dot.style.left = `${x}%`;
-
-      dotContainer.appendChild(dot);
-    }
-  }
-  
   async init() {
     await this.checkOverleafPage();
     await this.checkServerStatus();
@@ -49,8 +26,15 @@ generateDots() {
   async checkOverleafPage() {
     try {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (!tab?.url) {
+        this.updateStatus("❌", "Unable to detect current tab URL");
+        return;
+      }
 
-      if (!tab.url.includes("overleaf.com/project/")) {
+      const urlObj = new URL(tab.url);
+      const isValidOverleaf = urlObj.hostname === "www.overleaf.com" && urlObj.pathname.startsWith("/project/");
+
+      if (!isValidOverleaf) {
         this.updateStatus("⚠️", "Please navigate to your Overleaf project page");
         this.isOverleafReady = false;
         return;
@@ -63,6 +47,12 @@ generateDots() {
         return;
       }
 
+      // Prefer getting from content script (live)
+      const response = await this.sendMessageToTab(tab.id, { action: "getProjectInfo" });
+      if (response?.projectId !== projectId) {
+        console.warn("Mismatch or failed message from content script.");
+      }
+
       await chrome.storage.local.set({ projectId });
       this.updateStatus("✅", "Overleaf project detected");
       this.isOverleafReady = true;
@@ -73,17 +63,26 @@ generateDots() {
     }
   }
 
+  sendMessageToTab(tabId, message) {
+    return new Promise((resolve) => {
+      chrome.tabs.sendMessage(tabId, message, (response) => {
+        if (chrome.runtime.lastError) {
+          console.warn("Message error:", chrome.runtime.lastError.message);
+          resolve(null);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+  }
+
   async checkServerStatus() {
     try {
-      const response = await fetch("https://connection-99g4.onrender.com/health", {
-        method: "GET",
-      });
-
+      const response = await fetch("https://connection-99g4.onrender.com/health");
       if (response.ok) {
         this.isServerReady = true;
-        this.updateStatus("🚀", "Ready to sync! Click the button below.");
+        this.updateStatus("🚀", "Ready to sync! Click the button.");
       } else {
-        this.isServerReady = false;
         throw new Error("Server not OK");
       }
     } catch (error) {
@@ -94,11 +93,7 @@ generateDots() {
   }
 
   updateSyncButtonState() {
-    if (this.isOverleafReady && this.isServerReady) {
-      this.syncBtn.disabled = false;
-    } else {
-      this.syncBtn.disabled = true;
-    }
+    this.syncBtn.disabled = !(this.isOverleafReady && this.isServerReady);
   }
 
   async syncResume() {
@@ -148,11 +143,9 @@ generateDots() {
     if (show) {
       this.loadingRing.classList.remove("hidden");
       this.syncBtn.textContent = "Syncing...";
-      // this.syncBtn.style.display = "none";
     } else {
       this.loadingRing.classList.add("hidden");
-      this.syncBtn.textContent = "Sync"; 
-      this.syncBtn.style.display = "block";
+      this.syncBtn.textContent = "Sync";
     }
   }
 
@@ -173,6 +166,4 @@ generateDots() {
   }
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  new PopupController();
-});
+document.addEventListener("DOMContentLoaded", () => new PopupController());
