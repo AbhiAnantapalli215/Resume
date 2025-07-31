@@ -37,7 +37,7 @@ To install and use the extension locally:
 
 1. Clone this repository:
    ```bash
-   git clone https://github.com/<your-username>/<repo-name>.git
+   git clone https://github.com/AbhiAnantapalli215/Resume.git
 2. Go to chrome://extensions/.
 
 3. Enable Developer Mode.
