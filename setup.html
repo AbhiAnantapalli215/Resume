@@ -225,188 +225,177 @@
     }
   </style>
 </head>
+
 <body>
   <div class="container">
     <div class="header">
       <div class="logo">📄</div>
       <h1>Overleaf Resume Sync</h1>
-      <p class="subtitle">Complete setup guide to sync your LaTeX resume from Overleaf to GitHub</p>
+      <p class="subtitle">Step-by-step guide to deploy the resume sync backend and connect your GitHub</p>
     </div>
 
+    <!-- STEP 1: Clone Project -->
     <div class="step">
       <div class="step-header">
         <div class="step-number">1</div>
-        <div class="step-title">Download Required Files</div>
+        <div class="step-title">Clone the Repository</div>
       </div>
       <div class="step-content">
-        <p>Download the Python server script and GitHub Actions workflow:</p>
-        <div class="download-links">
-          <a href="#" class="download-btn" id="downloadServer">
-            📦 Download Server Script
-          </a>
-          <a href="#" class="download-btn" id="downloadWorkflow">
-            ⚙️ Download GitHub Workflow
-          </a>
-        </div>
-        <div class="info">
-          <div class="info-title">What's included:</div>
-          <ul>
-            <li><strong>app.py</strong> - Local Flask server for handling Overleaf downloads</li>
-            <li><strong>requirements.txt</strong> - Python dependencies</li>
-            <li><strong>github_workflow.yml</strong> - GitHub Actions for PDF compilation</li>
-          </ul>
-        </div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-header">
-        <div class="step-number">2</div>
-        <div class="step-title">Setup Python Environment</div>
-      </div>
-      <div class="step-content">
-        <p>Install Python dependencies and run the local server:</p>
+        <p>Start by cloning the official project repository to your local machine:</p>
         <div class="code-block">
-          <button class="copy-btn">Copy</button>
-# Install dependencies
-pip install flask requests python-dotenv PyGithub
-
-# Or using requirements.txt (if downloaded)
-pip install -r requirements.txt
-
-# Run the server
-python app.py
+          <button class="copy-btn">Copy</button>     
+git clone https://github.com/AbhiAnantapalli215/Resume.git
         </div>
-        <div class="warning">
-          <div class="warning-title">Important:</div>
-          The local server must be running for the extension to work. Keep the terminal window open.
-        </div>
+        <p>This will include the backend, extension code, and GitHub Actions workflow already configured.</p>
       </div>
     </div>
 
+  <!-- STEP 2: Load Extension in Chrome -->
+  <div class="step">
+    <div class="step-header">
+      <div class="step-number">2</div>
+      <div class="step-title">Install Extension via Chrome Developer Mode</div>
+    </div>
+    <div class="step-content">
+      <p>Once you’ve cloned the repository to your local machine, follow these steps to load the Chrome extension manually:</p>
+      <ol>
+        <li>Open Chrome and go to <code>chrome://extensions/</code></li>
+        <li>In the top-right corner, toggle on <strong>Developer mode</strong></li>
+        <li>Click on the <strong>“Load unpacked”</strong> button</li>
+        <li>Select the <code>extension</code> folder from the cloned repository (not the root folder)</li>
+        <li>The extension should now appear in your Chrome toolbar</li>
+        <li>Optional: Right-click the extension icon and click <strong>“Pin”</strong> to keep it visible</li>
+        <li>You can also assign a shortcut from the <code>chrome://extensions/shortcuts</code> page</li>
+      </ol>
+
+      <div class="info">
+        <div class="info-title">Reminder:</div>
+        <p>The extension relies on the backend server. Ensure it's deployed or running locally when using the extension.</p>
+      </div>
+    </div>
+  </div>
+
+    <!-- STEP 3: Deploy Docker Server -->
     <div class="step">
       <div class="step-header">
         <div class="step-number">3</div>
-        <div class="step-title">GitHub Repository Setup</div>
+        <div class="step-title">Deploy the Backend Server (Docker)</div>
       </div>
       <div class="step-content">
-        <p>Create a GitHub repository for your resume:</p>
-        <ol>
-          <li>Go to <a href="https://github.com/new" target="_blank">GitHub</a> and create a new repository</li>
-          <li>Name it something like <code>latex-resume</code></li>
-          <li>Make it public (required for GitHub Pages)</li>
-          <li>Initialize with a README</li>
-        </ol>
-        
-        <div class="file-structure">
-your-resume-repo/
-├── .github/
-│   └── workflows/
-│       └── build-resume.yml
-├── resume.tex
-├── README.md
-└── resume.pdf (auto-generated)
+        <p>This project uses a Docker-based backend to sync Overleaf with GitHub. You can deploy it on:</p>
+        <ul>
+          <li><a href="https://render.com" target="_blank">Render</a></li>
+          <li><a href="https://fly.io" target="_blank">Fly.io</a></li>
+          <li>Any Docker-compatible hosting service</li>
+        </ul>
+
+        <p><strong>Required environment variables during deployment:</strong></p>
+        <ul>
+          <li><code>GITHUB_USERNAME</code> – your GitHub username</li>
+          <li><code>GITHUB_REPO</code> – target repository name</li>
+          <li><code>GITHUB_TOKEN</code> – your personal access token (see next step)</li>
+        </ul>
+
+        <div class="info">
+          <div class="info-title">Want to run it locally?</div>
+          <p>You can also test it on your machine:</p>
+          <div class="code-block">
+            <button class="copy-btn">Copy</button><pre>
+docker build -t resume-sync .
+docker run -it --rm -p 5000:5000 \
+  -e GITHUB_USERNAME=your_username \
+  -e GITHUB_REPO=your_repo \
+  -e GITHUB_TOKEN=your_token \
+  resume-sync
+          </pre></div>
+          <p>This will start the server on <code>http://localhost:5000</code>.</p>
         </div>
       </div>
     </div>
 
+    <!-- STEP 4: GitHub Token Setup -->
     <div class="step">
       <div class="step-header">
         <div class="step-number">4</div>
-        <div class="step-title">GitHub Actions Workflow</div>
+        <div class="step-title">Create GitHub Personal Access Token</div>
       </div>
       <div class="step-content">
-        <p>Add the GitHub Actions workflow to automatically build your PDF:</p>
+        <p>This token is used by the backend server to push updates to your GitHub repository.</p>
         <ol>
-          <li>In your repository, create <code>.github/workflows/build-resume.yml</code></li>
-          <li>Copy the downloaded workflow content into this file</li>
-          <li>Commit and push the changes</li>
+          <li>Go to <a href="https://github.com/settings/tokens" target="_blank">GitHub Developer Settings</a></li>
+          <li>Click <strong>"Generate new token (classic)"</strong> or create a <strong>fine-grained token</strong></li>
+          <li>Set an expiration date if desired</li>
+          <li>Enable the following repo permissions (both read and write):
+            <ul>
+              <li><strong>actions</strong></li>
+              <li><strong>code</strong></li>
+              <li><strong>commit statuses</strong></li>
+            </ul>
+          </li>
+          <li>Copy the token and use it as <code>GITHUB_TOKEN</code> in your deployment</li>
         </ol>
-        <div class="info">
-          <div class="info-title">What this does:</div>
-          <ul>
-            <li>Automatically compiles your LaTeX resume to PDF when changes are pushed</li>
-            <li>Deploys the PDF to GitHub Pages</li>
-            <li>Makes your resume available at a permanent URL</li>
-          </ul>
+        <div class="warning">
+          <strong>Do not share this token</strong>. Keep it secret and safe like a password.
         </div>
       </div>
     </div>
 
+    <!-- STEP 5: Enable GitHub Pages -->
     <div class="step">
       <div class="step-header">
         <div class="step-number">5</div>
-        <div class="step-title">Environment Configuration</div>
-      </div>
-      <div class="step-content">
-        <p>Create a <code>.env</code> file in the same directory as your Python server:</p>
-        <div class="code-block">
-          <button class="copy-btn">Copy</button>
-# .env file
-GITHUB_TOKEN=your_github_personal_access_token
-GITHUB_USERNAME=your_github_username
-GITHUB_REPO=your_resume_repository_name
-        </div>
-        <div class="warning">
-          <div class="warning-title">GitHub Token Setup:</div>
-          <ol>
-            <li>Go to <a href="https://github.com/settings/tokens" target="_blank">GitHub Settings > Developer settings > Personal access tokens</a></li>
-            <li>Generate a new token (classic)</li>
-            <li>Give it <strong>repo</strong> permissions</li>
-            <li>Copy the token and add it to your .env file</li>
-          </ol>
-        </div>
-      </div>
-    </div>
-
-    <div class="step">
-      <div class="step-header">
-        <div class="step-number">6</div>
         <div class="step-title">Enable GitHub Pages</div>
       </div>
       <div class="step-content">
-        <p>Configure GitHub Pages to serve your resume:</p>
+        <p>Configure GitHub Pages to serve your generated <code>resume.pdf</code> file:</p>
         <ol>
-          <li>Go to your repository settings</li>
-          <li>Scroll to "Pages" section</li>
-          <li>Set source to "GitHub Actions"</li>
-          <li>Your resume will be available at: <code>https://username.github.io/repository-name/resume.pdf</code></li>
+          <li>Go to your GitHub repository → <strong>Settings</strong></li>
+          <li>Scroll to the <strong>Pages</strong> section</li>
+          <li>Under <strong>Source</strong>, choose <code>GitHub Actions</code> or root of <code>main</code> branch</li>
+          <li>Save the settings</li>
+          <li>Your resume will be available at:<br>
+            <code>https://your-username.github.io/your-repo-name/resume.pdf</code></li>
         </ol>
       </div>
     </div>
 
+    <!-- STEP 6: Use the Extension -->
     <div class="step">
       <div class="step-header">
-        <div class="step-number">7</div>
+        <div class="step-number">6</div>
         <div class="step-title">Test the Extension</div>
       </div>
       <div class="step-content">
-        <p>Now you're ready to use the extension:</p>
+        <p>Once everything is set up, it's time to sync!</p>
         <ol>
-          <li>Open your Overleaf project</li>
+          <li>Open your Overleaf project in your browser</li>
           <li>Click the extension icon</li>
-          <li>Click "Sync Resume to GitHub"</li>
-          <li>Check your GitHub repository for the updated files</li>
+          <li>Click <strong>"Sync Resume to GitHub"</strong></li>
           <li>Wait for GitHub Actions to build your PDF</li>
+          <li>Open your public resume URL to check the result</li>
         </ol>
+
         <div class="info">
           <div class="info-title">Troubleshooting:</div>
           <ul>
-            <li>Make sure the Python server is running</li>
-            <li>Check that your .env file has the correct GitHub credentials</li>
-            <li>Verify you're on an Overleaf project page</li>
-            <li>Check the browser console for any error messages</li>
+            <li>Ensure your backend server is running and reachable</li>
+            <li>Check for GitHub Actions errors in the “Actions” tab</li>
+            <li>Confirm your token is valid and has the correct scopes</li>
+            <li>Use browser console to debug extension errors</li>
           </ul>
         </div>
       </div>
     </div>
 
+    <!-- Footer -->
     <div class="footer">
-      <h3>🎉 You're all set!</h3>
-      <p>Your Overleaf resume will now sync to GitHub with one click, automatically building and deploying your PDF.</p>
+      <h3>🎉 All Set!</h3>
+      <p>You're now ready to automate your resume sync from Overleaf to GitHub with a single click!</p>
+      <p>For full project overview, see the <a href="README.md">README</a>.</p>
     </div>
   </div>
 
   <script src="setup.js"></script>
 </body>
+
 </html>
