@@ -47,6 +47,7 @@ To install and use the extension locally:
 5. Use the extension to sync your latest resume in a click!
 
 ## 🛠 Setup Instructions
-For full setup (backend deployment, GitHub configuration, environment variables), refer to the Setup Guide (`setup.html`).
+For full setup (backend deployment, GitHub configuration, environment variables), refer to the [Setup Guide](https://abhianantapalli215.github.io/Resume/setup.html)
+
 
 Made with 💻 by a developer who was tired of manually updating resumes.
