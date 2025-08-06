@@ -32,6 +32,13 @@
       padding: 40px;
       border-radius: 16px;
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      border: 3px solid transparent;
+    }
+
+    .top-section{
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
     }
 
     .logo {
@@ -39,12 +46,12 @@
       height: 64px;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
       border-radius: 16px;
-      margin: 0 auto 24px;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 32px;
       color: white;
+      margin-top: -7px;
     }
 
     h1 {
@@ -60,7 +67,7 @@
     .subtitle {
       font-size: 18px;
       color: #6b7280;
-      margin-bottom: 32px;
+      /* margin-bottom: 32px; */
     }
 
     .step {
@@ -223,17 +230,35 @@
     a:hover {
       text-decoration: underline;
     }
+
+    .hidelink {
+      text-decoration: none;
+      transition: all 0.3s ease;
+    }
+
+    .hidelink:hover .header{
+      background: linear-gradient(#fff, #fff) padding-box, 
+                  linear-gradient(45deg, #00f0ff, #ff00ff) border-box;
+    }
+
+    .hidelink:hover{
+      text-decoration: none;
+    }
+
   </style>
 </head>
 
 <body>
   <div class="container">
-    <div class="header">
-      <div class="logo">📄</div>
-      <h1>Overleaf Resume Sync</h1>
-      <p class="subtitle">Step-by-step guide to deploy the resume sync backend and connect your GitHub</p>
-    </div>
-
+    <a href="https://github.com/AbhiAnantapalli215/Resume" target="_blank" class="hidelink">
+      <div class="header">
+        <div class="top-section">
+          <div class="logo">📄</div>
+          <h1>Overleaf Resume Sync</h1>
+        </div>
+        <p class="subtitle">Step-by-step guide to deploy the resume sync backend and connect your GitHub</p>
+      </div>
+    </a>
     <!-- STEP 1: Clone Project -->
     <div class="step">
       <div class="step-header">
