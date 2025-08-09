@@ -134,51 +134,70 @@ body {
   /* --- KEY CHANGES --- */
   
   border: 2.5px solid transparent; 
-  animation: 
-    ringSpin 1s linear infinite,
-    ColorShift 20s linear infinite; 
 }
 
-/* The spinning animation remains the same */
-@keyframes ringSpin {
+/* Red ring */
+.ring.red {
+  width: 107px;
+  height: 107px;
+  color: #ff0000; /* sets currentColor */
+  animation-name: ringSpinRed, ringStrokeRed;
+  animation-duration: 1.2s, 1.2s;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Cyan ring */
+.ring.cyan {
+  width: 103px;
+  height: 103px;
+  color: #00ffff;
+  animation-name: ringSpinCyan, ringStrokeCyan;
+  animation-duration: 1.6s, 1.6s;
+  animation-timing-function: linear, ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+/* Rotation clockwise - Red */
+@keyframes ringSpinRed {
   0% {
     transform: rotate(0deg);
   }
   100% {
-    transform: rotate(360deg);
+    transform: rotate(720deg); /* 2 full rotations */
   }
 }
 
-/* --- KEY CHANGES --- */
-@keyframes ColorShift {
+/* Rotation clockwise - Cyan */
+@keyframes ringSpinCyan {
   0% {
-    border-top-color: #ffffff;
-    border-left-color: #00f0ff;
-    border-bottom-color: #ff00ff;
-    border-right-color: #00ff99;
-  }
-  25% {
-    border-top-color: #00ff99;
-    border-left-color: #ffffff;
-    border-bottom-color: #00f0ff;
-    border-right-color: #ff00ff;
-  }
-  50% {
-    border-top-color: #ff00ff;
-    border-left-color: #00ff99;
-    border-bottom-color: #ffffff;
-    border-right-color: #00f0ff;
-  }
-  75% {
-    border-top-color: #00f0ff;
-    border-left-color: #ff00ff;
-    border-bottom-color: #00ff99;
-    border-right-color: #ffffff;
+    transform: rotate(0deg);
   }
   100% {
-    border-top-color: #ffffff;
-    border-left-color: #00f0ff;
-    border-bottom-color: #ff00ff;
-    border-right-color: #00ff99;
+    transform: rotate(900deg); /* 2.5 rotations */
   }
-} 
+}
+
+/* Stroke length changes for Red ring using currentColor */
+@keyframes ringStrokeRed {
+  0%, 100% {
+    border-top-color: currentColor;
+    border-right-color: transparent;
+  }
+  50% {
+    border-top-color: currentColor;
+    border-right-color: currentColor;
+  }
+}
+
+/* Stroke length changes for Cyan ring using currentColor */
+@keyframes ringStrokeCyan {
+  0%, 100% {
+    border-top-color: currentColor;
+    border-right-color: transparent;
+  }
+  50% {
+    border-top-color: currentColor;
+    border-right-color: currentColor;
+  }
+}
