@@ -89,7 +89,7 @@ def push_to_github(tex_content):
         g = Github(GITHUB_TOKEN)
         repo = g.get_user(GITHUB_USERNAME).get_repo(GITHUB_REPO)
 
-        commit_message = f"Add/Update resume from Overleaf sync - {len(tex_content)} chars"
+        commit_message = f"Add/Update resume from Overleaf sync"
 
         try:
             file = repo.get_contents("resume.tex")
