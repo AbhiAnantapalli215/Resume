@@ -25,11 +25,11 @@ This Chrome extension automates the process of syncing your latest Overleaf LaTe
 
 ## ⚠️ Limitations
 
-- Only supports projects with a `main.tex` file.
+- Only fetches `main.tex` file from a Overleaf project.
 - Relies on GitHub's LaTeX compiler:
-  - Some Overleaf-specific LaTeX features may not work.
+  - Since Overleaf is a lenient LaTeX environment, resumes won't always works when compiled using other compilers like pdflatex, xelatex, etc ..
 - Resume updates may take time (due to GitHub CI build time).
-- Cold starts (e.g. on Render) may delay server response on first use.
+- Cold starts (e.g. on Render) may delay server response on first use of the day.
 
 ## 📥 Installation
 

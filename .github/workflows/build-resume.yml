@@ -17,7 +17,7 @@ concurrency:
 
 jobs:
   build:
-    if: github.event.head_commit.message == 'Add resume from Overleaf sync'
+    if: github.event.head_commit.message == 'Add/Update resume from Overleaf sync'
     runs-on: ubuntu-latest
 
     steps:
@@ -64,7 +64,7 @@ jobs:
         path: '.'
 
   deploy:
-    if: github.event.head_commit.message == 'Add resume from Overleaf sync'
+    if: github.event.head_commit.message == 'Add/Update resume from Overleaf sync'
     environment:
       name: github-pages  # ✅ REQUIRED
     runs-on: ubuntu-latest
