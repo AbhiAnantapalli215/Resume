@@ -110,11 +110,15 @@ def sync_resume():
             return jsonify({"error": "No .tex file found in ZIP"}), 400
 
         with open(tex_path, 'r', encoding='utf-8') as f:
-            tex_content = f.read()
+            tex_lines = f.readlines()
 
-        # Log the length and a preview of the tex file
-        logger.info(f"Length of tex_content: {len(tex_content)} characters")
-        logger.info(f"Preview of tex_content:\n{'='*40}\n{tex_content[:500]}\n{'='*40}")
+        # Log only lines 40–47 (Python indexes start at 0, so 39:47)
+        logger.info("Showing .tex file lines 40–47:")
+        logger.info("\n" + "".join(tex_lines[39:47]))
+
+        # Join back for GitHub push
+        tex_content = "".join(tex_lines)
+
 
         commit_url = push_to_github(tex_content)
         logger.info(f"Commit URL from GitHub: {commit_url}")
