@@ -47,11 +47,51 @@ def find_tex_file(directory):
                 return os.path.join(root, file)
     return None
 
+# @app.route('/sync', methods=['POST'])
+# def sync_resume():
+#     try:
+#         zip_file = request.files.get('zipfile')
+#         project_id = request.form.get('projectId')
+
+#         if not zip_file or not project_id:
+#             return jsonify({"error": "Missing file or project ID"}), 400
+
+#         extract_path = f"latex_projects/{project_id}"
+#         os.makedirs(extract_path, exist_ok=True)
+
+#         with zipfile.ZipFile(io.BytesIO(zip_file.read())) as z:
+#             z.extractall(extract_path)
+
+#         tex_path = find_tex_file(extract_path)
+#         if not tex_path:
+#             return jsonify({"error": "No .tex file found in ZIP"}), 400
+
+#         with open(tex_path, 'r', encoding='utf-8') as f:
+#             tex_content = f.read()
+
+#         commit_url = push_to_github(tex_content)
+#         if not commit_url:
+#             return jsonify({"error": "GitHub push failed"}), 500
+
+#         return jsonify({
+#             "message": "✅ Resume synced to GitHub!",
+#             "project_id": project_id,
+#             "repo_url": f"https://github.com/{GITHUB_USERNAME}/{GITHUB_REPO}",
+#             "commit_url": commit_url
+#         })
+
+#     except Exception as e:
+#         logger.error(f"Error during sync: {e}")
+#         return jsonify({"error": str(e)}), 500
+
 @app.route('/sync', methods=['POST'])
 def sync_resume():
     try:
         zip_file = request.files.get('zipfile')
         project_id = request.form.get('projectId')
+
+        logger.debug(f"Received projectId: {project_id}")
+        logger.debug(f"Received zip_file: {zip_file.filename if zip_file else None}")
 
         if not zip_file or not project_id:
             return jsonify({"error": "Missing file or project ID"}), 400
@@ -61,15 +101,24 @@ def sync_resume():
 
         with zipfile.ZipFile(io.BytesIO(zip_file.read())) as z:
             z.extractall(extract_path)
+        logger.debug(f"ZIP extracted to: {extract_path}")
 
         tex_path = find_tex_file(extract_path)
+        logger.debug(f"Found .tex file: {tex_path}")
+
         if not tex_path:
             return jsonify({"error": "No .tex file found in ZIP"}), 400
 
         with open(tex_path, 'r', encoding='utf-8') as f:
             tex_content = f.read()
 
+        # Log the length and a preview of the tex file
+        logger.info(f"Length of tex_content: {len(tex_content)} characters")
+        logger.info(f"Preview of tex_content:\n{'='*40}\n{tex_content[:500]}\n{'='*40}")
+
         commit_url = push_to_github(tex_content)
+        logger.info(f"Commit URL from GitHub: {commit_url}")
+
         if not commit_url:
             return jsonify({"error": "GitHub push failed"}), 500
 
@@ -81,15 +130,16 @@ def sync_resume():
         })
 
     except Exception as e:
-        logger.error(f"Error during sync: {e}")
+        logger.exception("Error during sync")
         return jsonify({"error": str(e)}), 500
+
 
 def push_to_github(tex_content):
     try:
         g = Github(GITHUB_TOKEN)
         repo = g.get_user(GITHUB_USERNAME).get_repo(GITHUB_REPO)
 
-        commit_message = f"Add/Update resume from Overleaf sync"
+        commit_message = "Add/Update resume from Overleaf sync"
 
         try:
             file = repo.get_contents("resume.tex")
