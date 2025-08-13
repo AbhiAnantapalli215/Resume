@@ -69,6 +69,15 @@ def sync_resume():
         with open(tex_path, 'r', encoding='utf-8') as f:
             tex_content = f.read()
 
+        # 🔍 Debug: Log lines 40–50 of resume.tex
+        tex_lines = tex_content.splitlines()
+        start_line = 39  # line 40 (0-indexed)
+        end_line = min(len(tex_lines), 50)
+        snippet = "\n".join(
+            f"{i+1}: {line}" for i, line in enumerate(tex_lines[start_line:end_line], start=start_line)
+        )
+        logger.info(f"📄 resume.tex lines 40–50:\n{snippet}")
+
         commit_url = push_to_github(tex_content)
         if not commit_url:
             return jsonify({"error": "GitHub push failed"}), 500

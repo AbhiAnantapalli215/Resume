@@ -24,6 +24,11 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v4
 
+    - name: Clean old LaTeX build files
+      run: |
+        echo "🧹 Cleaning old LaTeX auxiliary and PDF files..."
+        rm -f *.aux *.log *.fls *.out *.bbl *.blg *.fdb_latexmk *.toc *.lof *.lot *.pdf
+
     - name: Compile LaTeX (resume.tex)
       uses: xu-cheng/latex-action@v3
       with:
@@ -66,7 +71,7 @@ jobs:
   deploy:
     if: github.event.head_commit.message == 'Add/Update resume from Overleaf sync'
     environment:
-      name: github-pages  # ✅ REQUIRED
+      name: github-pages
     runs-on: ubuntu-latest
     needs: build
     permissions:
