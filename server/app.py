@@ -5,15 +5,12 @@ Local Flask server to handle Overleaf downloads and GitHub pushes
 """
 import io
 import os
-import tempfile
+import shutil
 import zipfile
-import requests
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from github import Github
 import logging
-
-
 
 app = Flask(__name__)
 CORS(app)
@@ -40,7 +37,15 @@ def health_check():
         "github_repo": f"{GITHUB_USERNAME}/{GITHUB_REPO}"
     })
 
-def find_tex_file(directory):
+def find_main_tex(directory):
+    """
+    Look specifically for main.tex, otherwise fallback to first .tex found.
+    """
+    for root, _, files in os.walk(directory):
+        for file in files:
+            if file.lower() == 'main.tex':
+                return os.path.join(root, file)
+    # Fallback
     for root, _, files in os.walk(directory):
         for file in files:
             if file.endswith('.tex') and not file.startswith('.'):
@@ -57,19 +62,27 @@ def sync_resume():
             return jsonify({"error": "Missing file or project ID"}), 400
 
         extract_path = f"latex_projects/{project_id}"
-        os.makedirs(extract_path, exist_ok=True)
 
+        # Clear old files to avoid pushing outdated .tex
+        if os.path.exists(extract_path):
+            shutil.rmtree(extract_path)
+        os.makedirs(extract_path)
+
+        # Extract new ZIP
         with zipfile.ZipFile(io.BytesIO(zip_file.read())) as z:
             z.extractall(extract_path)
 
-        tex_path = find_tex_file(extract_path)
+        # Find the main.tex
+        tex_path = find_main_tex(extract_path)
         if not tex_path:
-            return jsonify({"error": "No .tex file found in ZIP"}), 400
+            return jsonify({"error": "No main.tex found in ZIP"}), 400
+
+        logger.info(f"📄 Using .tex file for GitHub push: {tex_path}")
 
         with open(tex_path, 'r', encoding='utf-8') as f:
             tex_content = f.read()
 
-        # 🔍 Debug: Log lines 40–50 of resume.tex
+        # Debug snippet: lines 40-50
         tex_lines = tex_content.splitlines()
         start_line = 39  # line 40 (0-indexed)
         end_line = min(len(tex_lines), 50)
