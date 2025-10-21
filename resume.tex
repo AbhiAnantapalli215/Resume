@@ -1,140 +1,184 @@
 \documentclass[10pt,a4paper]{article}
+
+% ===== PACKAGES =====
 \usepackage[utf8]{inputenc}
-\usepackage[margin=0.5in]{geometry}
+\usepackage[margin=0.4in]{geometry}
 \usepackage{xcolor}
 \usepackage{enumitem}
 \usepackage{hyperref}
+\usepackage{tabularx}
+
+% ===== CUSTOM COLOR DEFINITIONS =====
+\definecolor{primary}{HTML}{2b2b2b} % Dark gray for section titles
+\definecolor{blued}{HTML}{1E90FF} % Link blue
+
+% ===== HYPERLINK SETUP =====
 \hypersetup{
     colorlinks=true,
-    linkcolor=cyan,
-    urlcolor=cyan,
+    linkcolor=black,
+    urlcolor=blued,
 }
 
-% Custom colors
-\definecolor{primary}{HTML}{2b2b2b}
-\definecolor{secondary}{HTML}{565656}
-
-% Custom itemize settings
+% ===== LIST AND SPACING SETTINGS (MORE COMPACT) =====
 \setlist[itemize]{
-    leftmargin=20pt,
-    itemsep=0pt,
-    parsep=2pt,
-    topsep=0pt,
-    partopsep=0pt,
-    labelsep=5pt
+    label=\textbullet,
+    leftmargin=1.5em,
+    itemsep=2pt,
+    parsep=0pt,
+    topsep=3pt
 }
 
-% Custom tighter itemize with indentation
-\newenvironment{tightitemize}{
-  \begin{itemize}[leftmargin=25pt, itemsep=2pt, parsep=2pt, topsep=2pt, partopsep=0pt]
-  \addtolength{\leftskip}{14pt} % Adjust this value to control the indentation
-}{
-  \end{itemize}
-}
+% ===== CUSTOM COMMANDS FOR STRUCTURE =====
 
-
-% Spacing commands
-\newcommand{\compactspace}{\vspace{5pt}}
-\newcommand{\sectiongap}{\vspace{10pt}}
-
-% Header
-\newcommand{\header}[2]{
+% --- HEADER ---
+\newcommand{\header}[6]{
     \begin{center}
         {\Huge \textbf{#1}} \\
-        \compactspace
-        {\normalsize #2}
+        \vspace{4pt}
+        #2 \hspace{1em} 
+        $\bullet$ \href{mailto:#3}{#3} \hspace{1em} 
+        $\bullet$ \href{https://www.#4}{#4} \\
+        \vspace{2pt}
+        $\bullet$ \href{https://#5}{#5} \hspace{1em} 
+        $\bullet$ \href{https://#6}{#6}
     \end{center}
 }
 
-% Section styling
+% --- SECTION TITLE ---
 \newcommand{\resumesection}[1]{
-    \sectiongap
-    {\color{primary} \large \textbf{#1}} \\
-    \hrule height 1pt \compactspace
+    \vspace{6pt}
+    {\color{primary} \large \textbf{\MakeUppercase{#1}}}
+    \vspace{6pt}
+    \hrule height 0.8pt
+    \vspace{4pt}
 }
 
+% --- GENERAL ENTRY (FOR INTERNSHIPS, ETC.) ---
+\newcommand{\entrybasic}[3]{
+    \noindent\textbf{#1} \hfill \textbf{#2} \\
+    \noindent\textit{#3}
+}
+
+% --- EDUCATION ENTRY ---
+\newcommand{\educationentry}[4]{
+    \noindent\textbf{#1} \hfill \textbf{#2} \\
+    \noindent\textit{#3} \hfill \textit{#4}
+    \vspace{4pt}
+}
+
+% --- TECH STACK ---
+\newcommand{\techstack}[1]{
+    \noindent\textbf{Tech Stack:} #1
+}
+
+% --- PROJECT ENTRY (NO EXTRA GAP) ---
+\newcommand{\entry}[3]{
+    \noindent\textbf{#1} \hfill #2%
+    \if\relax\detokenize{#3}\relax%
+    \else\\\noindent\textit{#3}%
+    \fi
+}
+
+% ===== DOCUMENT START =====
 \begin{document}
-\pagenumbering{gobble}
+\pagestyle{empty}
 
 % ===== HEADER =====
 \header{D B Abhishek Anantapalli}
-{+91 8317618694 \hspace{8pt}• \href{mailto:abhishekanantapalli@gmail.com}{abhishekanantapalli@gmail.com} \hspace{8pt}•  
-\href{https://www.linkedin.com/in/abhishekanantapalli/}{\textcolor{cyan}{LinkedIn}} \hspace{8pt}•  
-\href{https://github.com/AbhiAnantapalli215}{\textcolor{cyan}{GitHub}}}
+    {+91 8317618694}
+    {abhishekanantapalli@gmail.com}
+    {linkedin.com/in/abhishekanantapalli}
+    {abhianantapalli.netlify.app}
+    {github.com/AbhiAnantapalli215}
+
+% ===== PROFESSIONAL SUMMARY =====
+\resumesection{Professional Summary}
+Computer Science undergraduate with a strong foundation in data structures, algorithms, and front-end engineering. Skilled in building user-friendly interfaces and applying machine learning for practical impact. Proficient in Python, React, and predictive analytics, with exposure to cloud platforms and backend development.
+
 % ===== TECHNICAL SKILLS =====
-\resumesection{TECHNICAL SKILLS}
+\resumesection{Technical Skills}
 \begin{itemize}
-    \item \textbf{Languages}: C/C++, Python, Java
-    \item \textbf{Web Technologies}: React, Flask, JavaScript, HTML/CSS, Bootstrap
-    \item \textbf{Tools \& Platforms}: Git, GitHub, Linux, Firebase, MySQL
-    \item \textbf{Course Work}: Data Structures, OOP, Operating Systems, DBMS
+    \item \textbf{Languages}: C/C++, Python, Java, JavaScript
+    \item \textbf{Web \& Frameworks}: React, Flask, HTML/CSS, Bootstrap
+    \item \textbf{Cloud/Tools}: AWS, Git/GitHub, Docker, Firebase, Linux, MySQL
+    \item \textbf{CS Fundamentals}: Data Structures, OOP, Operating Systems, DBMS
 \end{itemize}
 
-% ===== INTERNSHIPS =====
-\resumesection{INTERNSHIPS}
-\textbf{AWS Cloud Intern – BrainOvision Solutions Pvt. Ltd.} \hfill \textbf{Jan 2024 -- Mar 2024}
-\begin{tightitemize}
-    \item Engineered a scalable cloud environment using AWS EC2 instances and S3 for application hosting.
-    \item Implemented robust security by configuring IAM roles, VPC subnets, and security groups.
-    \item Optimized content delivery and reduced latency by hosting static sites with S3 and CloudFront.
-\end{tightitemize}
+% ===== INTERNSHIP =====
+\resumesection{Internship}
+\entrybasic{AWS Cloud Intern}{Jan 2024 -- Mar 2024}{BrainOvision Solutions Pvt. Ltd.}
+\begin{itemize}
+    \item Managed core AWS services (EC2, S3, IAM, VPC) to build secure and scalable cloud infrastructure.
+    \item Deployed static websites using S3 and CloudFront to improve content delivery and reduce latency.
+    \item Enhanced security via IAM roles and VPC subnet policies for fine-grained access control.
+\end{itemize}
 
 % ===== PROJECTS =====
-\resumesection{PROJECTS}
+\resumesection{Projects}
+\entry
+  {Attrisense — HR Analytics Dashboard}
+  {\href{https://github.com/AbhiAnantapalli215/Attrisense}{\textbf{GitHub}} \textbar\hspace{2pt} \href{https://attrisense.web.app}{\textbf{Demo}}}
+  {}
+\begin{itemize}
+    \item Engineered a full-stack HR dashboard analyzing real-time data for 1,500+ employees.
+    \item Integrated an ML model (87\% recall) to predict employee attrition, potentially boosting retention by 2-3x.
+    \item Developed a responsive React front-end with Firebase for real-time data synchronization.
+    \item \techstack{React, Firebase, Python, JavaScript, Flask}
+\end{itemize}
 
-\textbf{Attrisense — HR Analytics Dashboard} \hfill  
-\href{https://github.com/AbhiAnantapalli215/Attrisense}{\textcolor{cyan}{GitHub}} \textbar\  
-\href{https://attrisense.web.app}{\textcolor{cyan}{Live}}
-\begin{tightitemize}
-    \item Engineered a full-stack HR dashboard with predictive analytics to identify at-risk employees.
-    \item Integrated a Python ML model with a React front-end using Firebase for real-time data flow.
-    \item Implemented a dynamic employee directory with live data editing, filtering, and pagination.
-    \item \textit{Tech Stack:} React, Firebase, JavaScript, Python
-\end{tightitemize}
 
-\textbf{E-commerce Website} \hfill  
-\href{https://github.com/AbhiAnantapalli215/amazon-clone}{\textcolor{cyan}{GitHub}}
-\begin{tightitemize}
-    \item Developed a responsive e-commerce front-end with a modern UI using React and styled-components.
-    \item Managed application-wide state for cart and user data using React Hooks and the Context API.
-    \item Ensured a seamless user experience across various devices through mobile-first design.
-    \item \textit{Tech Stack:} React, HTML, CSS, Bootstrap
-\end{tightitemize}
+\vspace{6pt}
 
-\textbf{Employee Attrition Prediction (ML App)} \hfill  
-\href{https://github.com/AbhiAnantapalli215/EmployeeAttritionPrediction}{\textcolor{cyan}{GitHub}} \textbar\  
-\href{https://empattritionprediction.onrender.com}{\textcolor{cyan}{Live}}
-\begin{tightitemize}
-    \item Built and deployed a Flask web service for real-time employee attrition prediction.
-    \item Optimized the ML model for high recall ($87\%$) to minimize the critical risk of false negatives.
-    \item Developed a clean, user-friendly interface for seamless input and prediction display.
-    \item \textit{Tech Stack:} Flask, HTML, CSS, scikit-learn
-\end{tightitemize}
+\entry
+  {WhoToAsk — Legal Assistant}
+  {\href{https://github.com/AbhiAnantapalli215/WhoToAsk}
+  {\textbf{GitHub}}}
+  {}
+\begin{itemize}
+    \item AI endpoint + MongoDB sessions handle nearly 10K contextual legal chats monthly.
+    \item Automated doc retrieval + email dispatch system delivers upto 3K documents/month.
+    \item Mobile frontend in JSX with Expo and translation support for 5+ South Indian languages.
+    \item \techstack{AI endpoints, React, Expo, Firebase, MongoDB}
+\end{itemize}
+
+
+\vspace{6pt}
+
+\entry
+  {LinkLeaf — Resume Deployment via Chrome Extension}
+  {\href{https://github.com/AbhiAnantapalli215/Resume}{\textbf{GitHub}}}
+  {}
+\begin{itemize}
+    \item Reduced a 10-minute manual process to a single click by creating a Chrome extension to sync LaTeX with GitHub.
+    \item Implemented a CI/CD pipeline with GitHub Actions for automatic, real-time resume compilation and deployment.
+    \item Boosted personal productivity by eliminating repetitive tasks and ensuring that the resume is always up to date.
+    \item \techstack{JavaScript, HTML/CSS, GitHub Actions, GitHub Pages}
+\end{itemize}
+
 
 % ===== EDUCATION =====
-\resumesection{EDUCATION}
-\textbf{Sri Vasavi Engineering College, Tadepalligudem} \hfill \textbf{2022--Present} \\
-\indent B.Tech in Computer Science and Engineering • CGPA: 9.22/10  \compactspace
-
-\textbf{JNV Pedavegi, Eluru} \hfill \textbf{2019--2022} \\
-\indent Intermediate (+2): 93\% • SSC: 86\%
+\resumesection{Education}
+\educationentry{Sri Vasavi Engineering College, Tadepalligudem}{2022 -- Present}
+    {B.Tech in Computer Science and Engineering}{CGPA: 9.22/10}
+    
+\educationentry{JNV Pedavegi, Eluru}{2019 -- 2022}
+    {Intermediate (+2): 93\% • SSC: 86\%}{}
 
 % ===== CERTIFICATIONS =====
-\resumesection{CERTIFICATIONS}
+\resumesection{Certifications}
 \begin{itemize}
-    \item Oracle Certified Data Science Professional (OCI 2025) \hfill Jun--Jul 2025
-    \item NPTEL Certified in Computer Networks \& Internet Protocol (Score: 83\%) \hfill Jan--Apr 2024
-    \item AWS Cloud Training (Internship-based, BrainOvision) \hfill Jan--Mar 2024
-    \item NPTEL Certified in Cybersecurity and Privacy (Score: 70\%) \hfill Jul--Oct 2024
+    \item Oracle Certified Data Science Professional (OCI 2025) \hfill Jun -- Jul 2025
+    \item NPTEL: Computer Networks \& Internet Protocol (Score: 83\%) \hfill Jan -- Apr 2024
+    \item AWS Cloud Training (Internship-based, BrainOvision) \hfill Jan -- Mar 2024
 \end{itemize}
 
 % ===== ACHIEVEMENTS =====
-\resumesection{ACHIEVEMENTS}
+\resumesection{Achievements}
 \begin{itemize}
-    \item Secured 2nd Prize in BrainOvision Hackathon focused on AWS cloud fundamentals.
-    \item Awarded 3rd Prize in the SVEC Web Development Hackathon for a project submission.
-    \item Solved 200+ DSA problems on LeetCode, focusing on medium-difficulty challenges.
-    \item Solved 550+ DSA problems on GeeksforGeeks, covering a wide array of topics.
+    \item Secured 2nd Prize in BrainOvision Hackathon for developing an AWS resource monitoring tool.
+    \item Secured 3rd Prize in SVEC Web Development Hackathon for building a front-end clone of Amazon.
+    \item Solved 200+ DSA problems on LeetCode with a focus on medium-level challenges.
+    \item Solved 500+ DSA problems on GeeksforGeeks, covering a wide array of topics.
 \end{itemize}
 
 \end{document}
